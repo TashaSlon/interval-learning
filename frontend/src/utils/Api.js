@@ -66,6 +66,54 @@ class Api {
     .then(this._getJson);
   }
 
+  getQuestions() {
+    return fetch(`${this._baseUrl}/questions`, {
+      method: 'GET',
+      headers: this._getHeaders(),
+      credentials: 'include' })
+    .then(this._getJson);
+  }
+
+  addNewQuestion(questionData) {
+    return fetch(`${this._baseUrl}/questions`, {
+      method: 'POST',
+      headers: this._getHeaders(),
+      credentials: 'include',
+      body: JSON.stringify({
+        question: questionData.question,
+        answer: questionData.answer,
+        term: questionData.term
+      })
+    })
+    .then(this._getJson);
+  }
+
+  deleteQuestion(questionId) {
+    return fetch(`${this._baseUrl}/questions/${questionId}`, {
+      method: 'DELETE',
+      headers: this._getHeaders(),
+      credentials: 'include'
+    })
+    .then(this._getJson);
+  }
+
+  getQuestionsForRepeat() {
+    return fetch(`${this._baseUrl}/questions/repeat`, {
+      method: 'GET',
+      headers: this._getHeaders(),
+      credentials: 'include' })
+    .then(this._getJson);
+  }
+
+  setQuestionDone(id) {
+    return fetch(`${this._baseUrl}/questions/repeat/${id}`, {
+      method: 'PATCH',
+      headers: this._getHeaders(),
+      credentials: 'include'
+    })
+    .then(this._getJson);
+  }
+
   setUserAvatar(link) {
     return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',

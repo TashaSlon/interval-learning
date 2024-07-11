@@ -1,5 +1,6 @@
 .auth__login-link {
-    padding-left: 3px;
-    color: #fff;
+    padding-left: 20px;
+    color: #000;
     text-decoration: none;
+    font-weight: 700;
 }

@@ -1,15 +1,21 @@
 import { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
-import {Main} from './Main';
+import Main from './Main.tsx';
+import {Profile} from './Profile';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import Login from './Login.js';
 import Register from './Register.js';
+import Header from './Header.js';
+import Repeat from './Repeat.js';
 import { api } from '../utils/Api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import {EditProfilePopup} from './EditProfilePopup.js';
 import {EditAvatarPopup} from './EditAvatarPopup.js';
 import {AddTermPopup} from './AddTermPopup.js';
+import {AddQuestionPopup} from './AddQuestionPopup.js';
+import {QuestionPopup} from './QuestionPopup.js';
+import {RepeatPopup} from './RepeatPopup.js';
 import ProtectedRouteElement from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import { getEmail, authorize, register,logout } from '../utils/auth.js';
@@ -18,12 +24,18 @@ import { getEmail, authorize, register,logout } from '../utils/auth.js';
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddTermPopupOpen, setIsAddTermPopupOpen] = useState(false);
+  const [isAddQuestionPopupOpen, setIsAddQuestionPopupOpen] = useState(false);
+  const [isQuestionPopupOpen, setIsQuestionPopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState(false);
+  const [isRepeatPopupOpen, setIsRepeatPopupOpen] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [terms, setTerms] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [questionsForRepeat, setQuestionsForRepeat] = useState([]);
+  const [question, setQuestion] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
   const [status, setStatus] = useState(false);
@@ -53,9 +65,9 @@ function App() {
 
   useEffect(() => {
     if (loggedIn){
-      api.getTerms()
-      .then(terms => {
-        setTerms(terms);
+      api.getQuestions()
+      .then(questions => {
+        setQuestions(questions);
       })
       .catch(err => console.log(`Ошибка.....: ${err}`))
     }},[loggedIn]);
@@ -68,12 +80,13 @@ function App() {
     setIsEditProfilePopupOpen(true);
   };
 
-  function handleAddPlaceClick() {
-    setIsAddTermPopupOpen(true);
+  function handleAddQuestionPopup() {
+    setIsAddQuestionPopupOpen(true);
   };
 
-  function handleCardClick(card) {
-    setSelectedCard(card);
+  function handleQuestionClick(question) {
+    setIsQuestionPopupOpen(true);
+    setQuestion(question);
   }
 
   function handleInfoTooltipClick(res) {
@@ -85,17 +98,29 @@ function App() {
 
   function closeAllPopups() {
     setIsAddTermPopupOpen(false);
+    setIsAddQuestionPopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsSubmitPopupOpen(false);
     setSelectedCard({});
     setIsInfoTooltipOpen(false);
+    setQuestion({});
+    setIsQuestionPopupOpen(false);
+    setIsRepeatPopupOpen(false);
   };
 
   function handleTermDelete(term) {
     api.deleteTerm(term._id)
     .then(() => {
         setTerms((state) => state.filter((c) => c._id !== term._id));
+    })
+    .catch(err => console.log(`Ошибка.....: ${err}`))
+  }
+
+  function handleQuestionDelete(question) {
+    api.deleteQuestin(question._id)
+    .then(() => {
+        setQuestions((state) => state.filter((c) => c._id !== question._id));
     })
     .catch(err => console.log(`Ошибка.....: ${err}`))
   }
@@ -122,6 +147,15 @@ function App() {
     api.addNewTerm(term)
     .then((newTerm) => {
       setTerms([newTerm, ...terms]);
+      closeAllPopups();
+    })
+    .catch(err => console.log(`Ошибка.....: ${err}`))
+  }
+
+  function handleAddQuestion(question) {
+    api.addNewQuestion(question)
+    .then((newQuestion) => {
+      setQuestions([newQuestion, ...questions]);
       closeAllPopups();
     })
     .catch(err => console.log(`Ошибка.....: ${err}`))
@@ -164,20 +198,41 @@ function App() {
     });
   }
 
+  function handleRepeat() {
+    api.getQuestionsForRepeat()
+    .then((questions) => {
+      const now = new Date();
+      console.log(questions);
+      setQuestionsForRepeat(questions);
+      navigate('/repeat', {replace: true});
+    })
+    .catch(err => console.log(`Ошибка.....: ${err}`))
+    
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
+        <Header loggedIn={loggedIn} signOut={signOut} onAddQuestion={handleAddQuestionPopup} onRepeat={handleRepeat}/>
         <Routes>
           <Route path="/" element={<ProtectedRouteElement
-          element={Main} onEditProfile = {handleEditProfileClick}
-            onAddPlace = {handleAddPlaceClick}
+            element={Main} 
+            onQuestionClick = {handleQuestionClick}
+            questions = {questions}
+            onQuestionDelete = {handleQuestionDelete}
+            loggedIn={loggedIn}
+          />} />
+          <Route path="/repeat" element={<ProtectedRouteElement
+            element={Repeat} 
+            questions = {questionsForRepeat}
+            loggedIn={loggedIn}
+          />} />
+          <Route path="/profile" element={<ProtectedRouteElement
+            element={Profile} 
+            onEditProfile = {handleEditProfileClick}
             onEditAvatar = {handleEditAvatarClick}
-            onCardClick = {handleCardClick}
-            terms = {terms}
-            onTermDelete = {handleTermDelete}
-            userData = {userData}
-            signOut = {signOut}
-          loggedIn={loggedIn}/>} />
+            loggedIn={loggedIn}
+          />} />
           <Route path="/sign-up" element={
             <div className="registerContainer">
               <Register onRegister={handleRegister} />
@@ -192,6 +247,9 @@ function App() {
         <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
         <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
         <AddTermPopup isOpen={isAddTermPopupOpen} onClose={closeAllPopups} onAddTerm={handleAddTerm}/>
+        <AddQuestionPopup isOpen={isAddQuestionPopupOpen} onClose={closeAllPopups} onAddQuestion={handleAddQuestion}/>
+        <QuestionPopup isOpen={isQuestionPopupOpen} onClose={closeAllPopups} question={question}/>
+        <RepeatPopup isOpen={isRepeatPopupOpen} onClose={closeAllPopups} question={question}/>
         <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} status={status}/>
 
         <PopupWithForm

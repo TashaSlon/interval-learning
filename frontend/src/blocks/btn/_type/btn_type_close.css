@@ -1,7 +1,8 @@
 .btn_type_close {
   position: absolute;
-  top: -36px;
-  right: 0;
+  top: 20px;
+  right: 20px;
+  z-index: 5;
 
   width: 20px;
   height: 20px;
@@ -16,7 +17,7 @@
 
 @media screen and (min-width: 515px) {
   .btn_type_close {
-    right: -40px;
+    right: 20px;
 
     width: 32px;
     height: 32px;

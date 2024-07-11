@@ -1,3 +1,6 @@
 .card__block {
   position: relative;
+
+  box-shadow: 2px 2px 3px 2px  rgb(59, 59, 59);
+  border-radius: 20px;
 }

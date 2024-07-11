@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
-import Header from './Header.js';
 
 const Register = (props) => {
   const [formValue, setFormValue] = useState({
@@ -26,7 +25,6 @@ const Register = (props) => {
 
   return (
     <>
-      <Header page={page}/>
       <section className="auth">
       <h2 className="auth__welcome">
         Регистрация

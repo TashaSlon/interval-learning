@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Header from './Header.js';
+import {Link} from 'react-router-dom';
 
 export default function Login(props) {
     const [formValue, setFormValue] = useState({
@@ -29,7 +29,6 @@ export default function Login(props) {
 
     return (
         <>
-            <Header page={page}/>
             <section className="auth">
                 <h2 className="auth__welcome">
                 Вход
@@ -41,6 +40,10 @@ export default function Login(props) {
                         <button type="submit" onSubmit={handleSubmit} className="auth__link">Войти</button>
                     </div>
                 </form>
+                <div className="auth__signin">
+                    <p>Не зарегистрированы?</p>
+                    <Link to="/sign-up" className="auth__login-link">Зарегистрироваться</Link>
+                </div>
             </section>
         </>
     )

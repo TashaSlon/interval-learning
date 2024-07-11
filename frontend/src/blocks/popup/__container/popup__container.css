@@ -4,9 +4,9 @@
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
 
-  width: 430px;
+  width: 90%;
+  height: 90vh;
   box-sizing: border-box;
 
   padding: 25px 22px;

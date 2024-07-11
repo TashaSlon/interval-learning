@@ -7,12 +7,20 @@ const questionSchema = new mongoose.Schema({
     minlength: 2,
     maxlength: 100,
   },
-  answer: {
-    type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 500,
-  },
+  answer: [{
+    type: {
+      type: String,
+      required: false,
+      minlength: 2,
+      maxlength: 100,
+    },
+    text: {
+      type: String,
+      required: false,
+      minlength: 2,
+      maxlength: 500,
+    }
+  }],
   term: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'term',
@@ -33,11 +41,14 @@ const questionSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
   },
-  /* questions: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'question',
-    default: [],
-  }], */
+  lastDate: {
+    type: Number,
+    default: 0,
+  },
+  nextDate: {
+    type: Number,
+    default: Date.now,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -1,16 +1,13 @@
 import { useContext } from "react";
-import { Term } from "./Term.js";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import Header from './Header.js';
+import { CurrentUserContext } from "../contexts/CurrentUserContext.js";
 import Footer from './Footer.js';
 
-const Main = (props) => {
+
+const Profile = (props) => {
   const currentUser = useContext(CurrentUserContext);
-  const page = 'main';
   
   return (
     <>
-    <Header page={page} email={props.userData.email} signOut={props.signOut}/>
     <main className="content">
       <section className="profile">
         <div className="profile__info">
@@ -26,14 +23,6 @@ const Main = (props) => {
             </div>
           </div>
         </div>
-        <button className="btn btn_type_add" type="button" onClick={props.onAddPlace}></button>
-      </section>
-      <section className="gallery">
-        <ul className="terms">
-            {props.terms.map(term => {
-                return (<Term key={term._id} term={term} onCardClick={props.onCardClick} onTermDelete={props.onTermDelete}/>)
-            })}
-        </ul>
       </section>
     </main>
     <Footer/>
@@ -41,4 +30,4 @@ const Main = (props) => {
   );
 };
 
-export {Main};
+export {Profile};

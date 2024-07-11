@@ -6,16 +6,22 @@ export default function Header(props) {
     return (
         <header className="header">
             <div className='header__block'>
-                <img src={logo} className="logo" alt="Логотип Место. Россия" />
+                <Link to="/" className="logo"><h1>Interval Learning</h1></Link>
+
                 { (() => {
-                    switch (props.page) {
-                        case "auth": 
-                            return <Link to="/sign-up" className="auth__login-link">Регистрация</Link>
-                        case "main": 
+                    switch (props.loggedIn) {
+                        case false: 
+                            return <></>
+                        case true: 
                             return <div className='header__user'>
-                                <p>{props.email}</p>
-                                <Link to="/sign-in" onClick={props.signOut} className="auth__login-link">Выйти</Link>
-                            </div>
+                                        <button className="btn btn_type_repeat" type="button" onClick={props.onRepeat}></button>
+                                        <button className="btn btn_type_add" type="button" onClick={props.onAddQuestion}></button>
+                                        <button className="btn btn_type_user" type="button"></button>
+                                        <ul className="dropdown">
+                                            <li><Link to="/profile">Профиль</Link></li>
+                                            <li><Link to="/sign-in" onClick={props.signOut} className="auth__login-link">Выйти</Link></li>
+                                        </ul> 
+                                    </div>
                         default:
                             return <Link to="/sign-in" className="auth__login-link">Войти</Link>
                     }
