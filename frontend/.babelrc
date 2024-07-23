@@ -3,7 +3,7 @@
       [
         "prismjs",
         {
-          "languages": ["javascript", "css", "html"],
+          "languages": ["javascript", "css", "html", "typescript"],
           "plugins": ["line-numbers", "show-language"],
           "theme": "okaidia",
           "css": true

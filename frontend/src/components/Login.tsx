@@ -1,21 +1,25 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 
-export default function Login(props) {
+type Props = {
+    handleLogin: (password: string, email: string) => void;
+}
+
+export default function Login(props: Props) {
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
-    })
+    });
 
-    const handleChange = (e) => {
+    const handleChange = (e: { target: { name: any; value: any; }; }) => {
         const {name, value} = e.target;
 
         setFormValue({
             ...formValue,
             [name]: value
         });
-    }
-    const handleSubmit = (e) => {
+    };
+    const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (!formValue.email || !formValue.password) {
             return;
@@ -23,9 +27,7 @@ export default function Login(props) {
         const { password, email } = formValue;
         props.handleLogin(password, email);
         setFormValue({email: '', password: ''});
-    }
-
-    const page = "auth";
+    };
 
     return (
         <>
@@ -46,5 +48,5 @@ export default function Login(props) {
                 </div>
             </section>
         </>
-    )
+    );
 }

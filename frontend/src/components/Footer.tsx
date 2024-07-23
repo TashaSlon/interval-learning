@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function Footer() {
     const year = new Date().getFullYear();
     
@@ -5,5 +7,5 @@ export default function Footer() {
         <footer className="footer">
             <p className="footer__text">&copy; {year} Interval learning</p>
         </footer>
-        );
-    };
+    );
+}

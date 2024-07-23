@@ -6,12 +6,12 @@ const NotAllowError = require('../errors/not-allow-err');
 const now = new Date();
 
 module.exports.createQuestion = (req, res, next) => {
-  const { question, answer } = req.body;
+  const { question, answer, term } = req.body;
   console.log(req.body);
 
   Question.create(
     {
-      question, answer, term: '662a4c718a9160c1faa202aa', owner: req.user._id, lastDate: 0, nextDate: now.getTime(),
+      question, answer, term, owner: req.user._id, lastDate: 0, nextDate: now.getTime(),
     },
   )
     .then((quest) => res.status(201).send(quest))
