@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import React from 'react';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
 export function AddTermPopup({isOpen, onClose, onAddTerm}:Props) {
     
     const [name, setName] = useState('');
+    const formRef = useRef<HTMLFormElement>(null);
 
     function handleNameChange(e: { target: { value: React.SetStateAction<string>; }; }) {
         setName(e.target.value);
@@ -35,7 +36,8 @@ export function AddTermPopup({isOpen, onClose, onAddTerm}:Props) {
             isOpen={isOpen}
             onClose={handleClose}
             buttonText='Сохранить'
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit}
+            formRef={formRef}>
             <label>
                 <input className="form__input form__input_type_title" type="text" id="title-input" required minLength={2} maxLength={30} placeholder="Название" name="name" onChange={handleNameChange} value={name}/>
                 <span className="form__input-error title-input-error"></span>

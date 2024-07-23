@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useState, useContext, FormEvent } from 'react';
+import { useState, useContext, FormEvent, SyntheticEvent, useRef } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
 import { QuestionType, Answer, AnswerBlock } from './QuestionPopup';
@@ -22,6 +22,8 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
     const [answer, setAnswer] = useState<Answer>(empetyAnswerBlock);
     const [blockAmount, setBlockAmount] = useState(1);
     const [term, setTerm] = useState('662a4c7c8a9160c1faa202ac');
+
+    const formRef = useRef<HTMLFormElement>(null);
 
     const fullBlocks:JSX.Element[] = [<label>
         <select name="codeType" id={'text-type-'+ 0} onChange={handleAnswerTypeChange}>
@@ -116,7 +118,9 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
             _id: currentUser._id
         };
         onAddQuestion(newQuestion);
-        //e.target.reset();
+        if (formRef.current) {
+            formRef.current.reset();
+        }
         handleClose();
     }
 
@@ -127,7 +131,8 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
             isOpen={isOpen}
             onClose={handleClose}
             buttonText='Сохранить'
-            onSubmit={handleSubmit}>
+            onSubmit={handleSubmit}
+            formRef={formRef}>
             <>
                 <label>
                     <input className="form__input form__input_type_title" type="text" id="title-input" required placeholder="Вопрос" name="question" onChange={handleQuestionChange} value={question}/>
