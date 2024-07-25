@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useState, useContext, FormEvent, SyntheticEvent, useRef } from 'react';
+import { useState, useContext, FormEvent, useRef } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
 import { QuestionType, Answer, AnswerBlock } from './QuestionPopup';

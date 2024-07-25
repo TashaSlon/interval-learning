@@ -4,18 +4,34 @@ const NotFoundError = require('../errors/not-found-err');
 const NotAllowError = require('../errors/not-allow-err');
 
 const now = new Date();
+// const currentDay = now.getDate() + 1;
+// const currentMonth = now.getMonth() + 1;
+// const currentYear = now.getFullYear();
+// const today = new Date(`${currentYear}-${currentMonth}-${currentDay}`);
+const tommorow = new Date().getTime() + 86400000;
+
+function getNextRepeat(repeatCount) {
+  if (repeatCount === 0) return 86400000;
+  if (repeatCount === 1) return 86400000 * 3;
+  if (repeatCount === 2) return 86400000 * 5;
+  if (repeatCount === 3) return 86400000 * 10;
+  if (repeatCount === 4) return 86400000 * 3 * 7;
+  if (repeatCount === 5) return 86400000 * 2 * 30;
+  if (repeatCount > 5) return 86400000 * 6 * 30;
+  return 86400000;
+}
 
 module.exports.createQuestion = (req, res, next) => {
   const { question, answer, term } = req.body;
-  console.log(req.body);
 
   Question.create(
     {
-      question, answer, term, owner: req.user._id, lastDate: 0, nextDate: now.getTime(),
+      question, answer, term, owner: req.user._id, lastDate: 0, nextDate: tommorow, repeatCount: 0,
     },
   )
     .then((quest) => res.status(201).send(quest))
     .catch((err) => {
+      console.log(err);
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные при создании вопроса'));
       } else {
@@ -60,24 +76,32 @@ module.exports.deleteQuestion = (req, res, next) => {
 };
 
 module.exports.setQuestionDone = (req, res, next) => {
-  Question.findByIdAndUpdate(
-    req.params.id,
-    {
-      lastDate: new Date().getTime(),
-      nextDate: new Date().getTime() + 259200000,
-    },
-    {
-      new: true,
-      runValidators: true,
-    },
-  )
-    .orFail(() => new NotFoundError('Вопрос с указанным id не существует'))
-    .then((user) => res.send(user))
+  Question.findById(req.params.id)
+    .orFail(() => new NotFoundError('Вопрос не найден, либо был удален'))
+    .then((question) => {
+      Question.findByIdAndUpdate(
+        question._id,
+        {
+          lastDate: new Date().getTime(),
+          nextDate: new Date().getTime() + getNextRepeat(question.repeatCount),
+          repeatCount: question.repeatCount + 1,
+        },
+        {
+          new: true,
+          runValidators: true,
+        },
+      )
+        .orFail(() => new NotFoundError('Вопрос не найден, либо был удален'))
+        .then((user) => res.send(user))
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            next(new BadRequestError('Некорректные данные при обновлении вопроса'));
+          } else {
+            next(err);
+          }
+        });
+    })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Некорректные данные при обновлении вопроса'));
-      } else {
-        next(err);
-      }
+      next(err);
     });
 };

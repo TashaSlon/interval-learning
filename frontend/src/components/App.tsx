@@ -73,7 +73,7 @@ function App() {
         if (loggedIn){
             api.getQuestions()
                 .then(questions => {
-                    setQuestions(questions);
+                    setQuestions(questions.reverse());
                 })
                 .catch(err => console.log(`Ошибка.....: ${err}`));
         }},[loggedIn]);

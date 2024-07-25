@@ -18,8 +18,8 @@ const questionSchema = new mongoose.Schema({
       type: String,
       required: false,
       minlength: 2,
-      maxlength: 500,
-    }
+      maxlength: 1000,
+    },
   }],
   term: {
     type: mongoose.Schema.Types.ObjectId,
@@ -48,6 +48,10 @@ const questionSchema = new mongoose.Schema({
   nextDate: {
     type: Number,
     default: Date.now,
+  },
+  repeatCount: {
+    type: Number,
+    default: 0,
   },
   createdAt: {
     type: Date,
