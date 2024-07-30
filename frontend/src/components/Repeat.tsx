@@ -54,9 +54,7 @@ const Repeat = (props: Props):JSX.Element => {
 
     function handleQuestionDone() {
         api.setQuestionDone(questions[questionNum]._id)
-            .then((question) => {
-                console.log(question);
-            })
+            .then((question) => question)
             .catch(err => console.log(`Ошибка.....: ${err}`));
         if (questionNum < questionsCount) {
             handleQuestionNext();

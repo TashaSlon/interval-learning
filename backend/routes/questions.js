@@ -13,10 +13,10 @@ router.delete('/:questionId', celebrate({
 }), deleteQuestion);
 router.post('/', celebrate({
   body: Joi.object().keys({
-    question: Joi.string().required().min(2).max(100),
+    question: Joi.string().required().min(2).max(150),
     answer: Joi.array().items(Joi.object({
       type: Joi.string().required().min(2).max(30),
-      text: Joi.string().required().min(2).max(500),
+      text: Joi.string().required().min(2).max(1000),
     })),
     term: Joi.string().required().min(2).max(30),
     /* chapter: Joi.string().required().min(2).max(30),

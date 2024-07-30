@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useState, useContext, FormEvent, useRef } from 'react';
+import { useState, useContext, FormEvent, useRef, ChangeEvent } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
 import { QuestionType, Answer, AnswerBlock } from './QuestionPopup';
@@ -62,11 +62,13 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
         );
     }
 
-    function handleQuestionChange(e: { target: { value: string; }; }) {
-        setQuestion(e.target.value);
+    function handleQuestionChange(e: ChangeEvent<HTMLInputElement>) {
+        if (e.target) {
+            setQuestion(e.target.value);
+        }
     }
 
-    function handleAnswerTypeChange(e: { target: { id: string; value: string; }; }) {
+    function handleAnswerTypeChange(e: ChangeEvent<HTMLSelectElement>) {
         const idAnswer = Number(e.target.id.slice(10));
         const newBlock: AnswerBlock = {...answer[idAnswer]};
         newBlock.type = e.target.value;
@@ -75,7 +77,7 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
         setAnswer(newAnswer);
     }
 
-    function handleAnswerTextChange(e: { target: { id: string; value: string; }; }) {
+    function handleAnswerTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
         const idAnswer = Number(e.target.id.slice(11));
         const newBlock: AnswerBlock = {...answer[idAnswer]};
         newBlock.text = e.target.value;
@@ -84,7 +86,11 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
         setAnswer(newAnswer);
     }
 
-    function handleTermChange(e: { target: { value: string; }; }) {
+    function handleTermSelect(e: ChangeEvent<HTMLSelectElement>) {
+        setTerm(e.target.value);
+    }
+
+    function handleTermChange(e: ChangeEvent<HTMLInputElement>) {
         setTerm(e.target.value);
     }
 
@@ -141,7 +147,7 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
                 {fullBlocks}
                 <button type='button'  className='btn' onClick={addBlock}>Добавить блок</button>
                 <label>
-                    <select name="term" id="term" onChange={handleTermChange}>
+                    <select name="term" id="term" onChange={handleTermSelect}>
                         {fullTerms}
                     </select>
                 </label>

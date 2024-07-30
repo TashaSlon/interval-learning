@@ -58,10 +58,11 @@ function App() {
             })
             .catch(err => console.log(`Ошибка.....: ${err}`));
     }
-
+    console.log('ttttt');
     useEffect(() => {
         tokenCheck();
         if (loggedIn){
+            console.log('fff');
             api.getUserInfo()
                 .then(userData => {
                     setCurrentUser(userData);
