@@ -56,7 +56,11 @@ function App() {
                     navigate('/', {replace: true});
                 }
             })
-            .catch(err => console.log(`Ошибка.....: ${err}`));
+            .catch(err => {
+                setLoggedIn(false);
+                console.log(`Ошибка.....: ${err}`);
+                navigate('/sign-in', {replace: false});
+            });
     }
     console.log('ttttt');
     useEffect(() => {

@@ -81,6 +81,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.getProfile = (req, res, next) => {
+  console.log(req);
   User.findById(req.user._id)
     .orFail(() => new NotFoundError('Пользователь с указанным id не существует'))
     .then((user) => res.status(200).send(user))
