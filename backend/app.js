@@ -19,8 +19,6 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 const allowedCors = [
-  'https://tashaslon.nomoreparties.sbs',
-  'http://tashaslon.nomoreparties.sbs',
   'http://localhost:3001',
   'http://localhost:3000',
 ];
@@ -32,7 +30,6 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
   }
-
   const { method } = req;
 
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
@@ -52,8 +49,8 @@ app.use((req, res, next) => {
 
 mongoose.connect('mongodb://localhost:27017/interval-learning', {
 });
-app.use(express.json());
 
+app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -81,11 +78,10 @@ app.post('/signup', celebrate({
     avatar: Joi.string().regex(/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/),
   }),
 }), createUser);
-
 app.use(auth);
+
 app.use('/signout', logout);
 app.use('/users', routerUsers);
-
 app.use('/terms', routerTerms);
 app.use('/questions', routerQuestions);
 app.use('/*', (req, res, next) => {
@@ -94,6 +90,7 @@ app.use('/*', (req, res, next) => {
 
 app.use(errorLogger);
 app.use(errors());
+
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
