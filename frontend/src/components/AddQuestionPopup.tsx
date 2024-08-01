@@ -2,8 +2,9 @@ import PopupWithForm from './PopupWithForm';
 import { useState, useContext, FormEvent, useRef, ChangeEvent } from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
-import { QuestionType, Answer, AnswerBlock } from './QuestionPopup';
-import { TermType } from './Term';
+import { Answer, AnswerBlock } from './QuestionPopup';
+import type { QuestionType } from './QuestionPopup';
+import type { TermType } from './Term';
 
 type Props = {
     isOpen: boolean, 

@@ -62,7 +62,6 @@ function App() {
                 navigate('/sign-in', {replace: false});
             });
     }
-    console.log('ttttt');
     useEffect(() => {
         tokenCheck();
         if (loggedIn){

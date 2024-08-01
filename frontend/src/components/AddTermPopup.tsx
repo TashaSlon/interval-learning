@@ -1,5 +1,5 @@
 import PopupWithForm from './PopupWithForm';
-import { useRef, useState } from 'react';
+import { ChangeEvent, FormEvent, useRef, useState } from 'react';
 import React from 'react';
 
 type Props = {
@@ -13,7 +13,7 @@ export function AddTermPopup({isOpen, onClose, onAddTerm}:Props) {
     const [name, setName] = useState('');
     const formRef = useRef<HTMLFormElement>(null);
 
-    function handleNameChange(e: { target: { value: React.SetStateAction<string>; }; }) {
+    function handleNameChange(e: ChangeEvent<HTMLInputElement>) {
         setName(e.target.value);
     }
 
@@ -22,7 +22,7 @@ export function AddTermPopup({isOpen, onClose, onAddTerm}:Props) {
         setName('');
     }
 
-    function handleSubmit(e: { preventDefault: () => void; }) {
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
         // Запрещаем браузеру переходить по адресу формы
         e.preventDefault();
 

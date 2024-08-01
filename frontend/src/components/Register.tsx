@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, FormEvent, useState} from 'react';
 import {Link} from 'react-router-dom';
 
 type Props = {
@@ -11,7 +11,7 @@ const Register = (props: Props) => {
         password: ''
     });
 
-    const handleChange = (e: { target: { name: any; value: any; }; }) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
 
         setFormValue({
@@ -19,7 +19,7 @@ const Register = (props: Props) => {
             [name]: value
         });
     };
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
         e.preventDefault();
     
         const { password, email } = formValue;
@@ -32,7 +32,7 @@ const Register = (props: Props) => {
                 <h2 className="auth__welcome">
         Регистрация
                 </h2>
-                <form onSubmit={handleSubmit} className="auth__form">
+                <form className="auth__form">
                     <input className="auth__input" id="email" name="email" type="email" value={formValue.email} onChange={handleChange} placeholder='Email'/>
                     <input className="auth__input" id="password" name="password" type="password" value={formValue.password} onChange={handleChange} placeholder='Пароль'/>
                     <div className="auth__button-container">
