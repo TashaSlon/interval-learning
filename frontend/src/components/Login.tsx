@@ -6,6 +6,7 @@ type Props = {
 }
 
 export default function Login(props: Props) {
+
     const [formValue, setFormValue] = useState({
         email: '',
         password: ''
@@ -19,12 +20,18 @@ export default function Login(props: Props) {
             [name]: value
         });
     };
+
+    console.log(formValue);
     const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
+        console.log(e);
         e.preventDefault();
+        console.log(formValue);
+
         if (!formValue.email || !formValue.password) {
             return;
         }
         const { password, email } = formValue;
+        console.log(formValue);
         props.handleLogin(password, email);
         setFormValue({email: '', password: ''});
     };

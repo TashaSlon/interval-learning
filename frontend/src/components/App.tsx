@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Main from './Main';
 import Login from './Login';
 import Register from './Register';
@@ -15,7 +16,7 @@ import {RepeatPopup} from './RepeatPopup';
 import ProtectedRouteElement from './ProtectedRoute';
 import InfoTooltip from './InfoTooltip';
 import { getEmail, authorize, register,logout } from '../utils/auth.js';
-import React from 'react';
+import {getQuestions} from '../services/questionSlice';
 
 type Result = {
     data: object
@@ -30,7 +31,7 @@ function App() {
     const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
     const [currentUser, setCurrentUser] = useState({});
     const [terms, setTerms] = useState<TermType[]>([]);
-    const [questions, setQuestions] = useState<QuestionType[]>([]);
+    //const [questions, setQuestions] = useState<QuestionType[]>([]);
     const [questionsForRepeat, setQuestionsForRepeat] = useState([]);
     const [question, setQuestion] = useState<QuestionType>({
         _id: '',
@@ -46,6 +47,7 @@ function App() {
     const [userData, setUserData] = useState({});
     const [status, setStatus] = useState(false);
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     function tokenCheck() {
@@ -57,6 +59,7 @@ function App() {
                 }
             })
             .catch(err => {
+                console.log('object');
                 setLoggedIn(false);
                 console.log(`Ошибка.....: ${err}`);
                 navigate('/sign-in', {replace: false});
@@ -75,11 +78,7 @@ function App() {
 
     useEffect(() => {
         if (loggedIn){
-            api.getQuestions()
-                .then(questions => {
-                    setQuestions(questions.reverse());
-                })
-                .catch(err => console.log(`Ошибка.....: ${err}`));
+            dispatch(getQuestions());
         }},[loggedIn]);
 
     useEffect(() => {
@@ -133,13 +132,13 @@ function App() {
             .catch(err => console.log(`Ошибка.....: ${err}`));
     }
 
-    function handleQuestionDelete(question:QuestionType) {
+    /* function handleQuestionDelete(question:QuestionType) {
         api.deleteQuestion(question._id)
             .then(() => {
                 setQuestions((state) => state.filter((c) => c._id !== question._id));
             })
             .catch(err => console.log(`Ошибка.....: ${err}`));
-    }
+    } */
 
     function handleAddTerm(term: string):string {
         let id = '';
@@ -150,15 +149,6 @@ function App() {
             })
             .catch(err => console.log(`Ошибка.....: ${err}`));
         return id;
-    }
-
-    function handleAddQuestion(question:QuestionType) {
-        api.addNewQuestion(question)
-            .then((newQuestion:QuestionType) => {
-                setQuestions([newQuestion, ...questions]);
-                closeAllPopups();
-            })
-            .catch(err => console.log(`Ошибка.....: ${err}`));
     }
 
     function handleLogin(password:string, email:string) {
@@ -215,10 +205,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={
                         <ProtectedRouteElement isLogin={loggedIn}>
-                            <Main onQuestionClick = {handleQuestionClick}
-                                questions = {questions}
-                                onQuestionDelete = {handleQuestionDelete}
-                            />
+                            <Main onQuestionClick = {handleQuestionClick}/>
                         </ProtectedRouteElement>
                     } />
                     <Route path="/repeat" element={
@@ -238,7 +225,7 @@ function App() {
                 </Routes>
 
                 <AddTermPopup isOpen={isAddTermPopupOpen} onClose={closeAllPopups} onAddTerm={handleAddTerm}/>
-                <AddQuestionPopup isOpen={isAddQuestionPopupOpen} onClose={closeAllPopups} onAddQuestion={handleAddQuestion} onAddTerm={handleAddTerm} terms={terms}/>
+                <AddQuestionPopup isOpen={isAddQuestionPopupOpen} onClose={closeAllPopups} onAddTerm={handleAddTerm} terms={terms}/>
                 <QuestionPopup isOpen={isQuestionPopupOpen} onClose={closeAllPopups} question={question}/>
                 <RepeatPopup isOpen={isRepeatPopupOpen} onClose={closeAllPopups} question={question}/>
                 <InfoTooltip isOpen={isInfoTooltipOpen} onClose={closeAllPopups} status={status}/>

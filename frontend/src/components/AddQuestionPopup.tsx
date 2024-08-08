@@ -1,20 +1,22 @@
-import PopupWithForm from './PopupWithForm';
 import { useState, useContext, FormEvent, useRef, ChangeEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import PopupWithForm from './PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import React from 'react';
 import { Answer, AnswerBlock } from './QuestionPopup';
 import type { QuestionType } from './QuestionPopup';
 import type { TermType } from './Term';
+import {addQuestion} from '../services/questionSlice';
 
 type Props = {
     isOpen: boolean, 
     onClose: () => void, 
-    onAddQuestion: (arg0: QuestionType) => void,
+    //onAddQuestion: (arg0: QuestionType) => void,
     onAddTerm: (term:string) => string,
     terms: TermType[]
 }
 
-export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, terms}:Props) {
+export function AddQuestionPopup({isOpen, onClose, onAddTerm, terms}:Props) {
     const empetyBlock: AnswerBlock = { text: '', type: 'text'};
     const empetyAnswerBlock: Answer = [{text: '', type: 'text'}];
 
@@ -25,6 +27,7 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
     const [term, setTerm] = useState('662a4c7c8a9160c1faa202ac');
 
     const formRef = useRef<HTMLFormElement>(null);
+    const dispatch = useDispatch();
 
     const fullBlocks:JSX.Element[] = [<label>
         <select name="codeType" id={'text-type-'+ 0} onChange={handleAnswerTypeChange}>
@@ -105,6 +108,10 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
         setTerm(termId);
     }
 
+    function handleAddQuestion(question:QuestionType) {
+        dispatch(addQuestion(question));
+    }
+
     function handleClose() {
         onClose();
         setQuestion('');
@@ -124,7 +131,7 @@ export function AddQuestionPopup({isOpen, onClose, onAddQuestion, onAddTerm, ter
             term,
             _id: currentUser._id
         };
-        onAddQuestion(newQuestion);
+        handleAddQuestion(newQuestion);
         if (formRef.current) {
             formRef.current.reset();
         }
